@@ -1,0 +1,81 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres_container_chat
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_DB: "postgresdb"
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "password123"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - postgresdb-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres_user -d postgresdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks:
+      - application
+
+  pgadmin:
+    container_name: pgadmin_container_chat
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pgadmin@mail.ru"
+      PGADMIN_DEFAULT_PASSWORD: "password123"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5055:80"
+    restart: unless-stopped
+    networks:
+      - application
+  
+  # redis:
+  #   container_name: redis-server
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379"
+  #   build:
+  #     args:
+  #       SAVE: --save 60
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - application
+
+  # app:
+  #   build: .
+  #   environment:
+  #     - DB_NAME=postgresdb
+  #     - DB_USER=postgres_user
+  #     - DB_PASSWORD=password123
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #   ports:
+  #     - "8080:8080"
+  #   command: >
+  #     sh -c "poetry run alembic upgrade head && 
+  #          poetry run uvicorn app.main:app --host 0.0.0.0 --port 8080"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     # redis:
+  #     #   condition: service_healthy
+  #   networks:
+  #     - application
+
+volumes:
+  postgresdb-data:
+  pgadmin-data:
+  redis-data:
+
+networks:
+  application:
+    driver: bridge
