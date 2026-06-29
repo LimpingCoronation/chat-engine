@@ -3,8 +3,8 @@ Rest API:
     - Authorization via jwt token +
     - Creating group
 Websocket:
-    - Writing text message to chat
-    - Create new chat on message to new user
-    - Display is messages delivered
+    - Writing text message to chat +
+    - Create new chat on message to new user +
+    - Display is messages delivered +
     - Display is message read
     - Send mediafiles
