@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: str = "5432"
     SALT: str = "salt"
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: str = "6379"
+    CHANNEL_NAME: str = "chat"
 
     class ConfigDict:
         env: Path = BASE_DIR / ".env"

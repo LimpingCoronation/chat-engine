@@ -25,7 +25,9 @@ async def sign_up(body: RegistrationUserModel, session = Depends(session_getter)
     try:
         user = await users_repo.create(**user_data)
         await session.commit()
-        return JSONResponse(user, status_code=201)
+        
+        user_pydantic = RegistrationUserModel.model_validate(user)
+        return JSONResponse(user_pydantic.model_dump(), status_code=201)
     except IntegrityError as e:
         raise HTTPException(status_code = 400, detail="User with such login already exists")
 
@@ -47,3 +49,14 @@ async def sign_in(body: AuthUserModel, session = Depends(session_getter)):
 @router.get('/profile/')
 async def get_profile(user = Depends(get_user)) -> UserModel:
     return user
+
+
+@router.get('/get/{login}')
+async def get_user_by_login(login: str, user = Depends(get_user), session = Depends(session_getter)) -> UserModel:
+    users_repo = get_repository(session, User)
+    user_from_db = await users_repo.get_first(login=login)
+    
+    if user_from_db:
+        return user_from_db
+    else:
+        raise HTTPException(status_code=404, detail="No such user")

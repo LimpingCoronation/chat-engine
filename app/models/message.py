@@ -1,7 +1,10 @@
 import uuid
 from datetime import datetime
 
-from sqlmodel import SQLModel, Field, Column, JSON
+from sqlmodel import SQLModel, Field, Column, JSON, Relationship
+
+from app.models.users import User
+from app.models.chat import Chat
 
 
 class Message(SQLModel, table=True):
@@ -15,3 +18,6 @@ class Message(SQLModel, table=True):
     user_id: uuid.UUID = Field(foreign_key="users.id")
     chat_id: uuid.UUID = Field(foreign_key="chat.id")
     created_at: datetime = Field(default_factory=datetime.now)
+    
+    user: User = Relationship()
+    chat: Chat = Relationship()

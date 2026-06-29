@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlmodel import SQLModel, Field
 
-from models.enums.chat_types import ChatTypes
+from app.models.enums.chat_types import ChatTypes
 
 
 class Chat(SQLModel, table=True):

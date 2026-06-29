@@ -37,18 +37,18 @@ services:
     networks:
       - application
   
-  # redis:
-  #   container_name: redis-server
-  #   image: redis:latest
-  #   ports:
-  #     - "6379:6379"
-  #   build:
-  #     args:
-  #       SAVE: --save 60
-  #   volumes:
-  #     - redis-data:/data
-  #   networks:
-  #     - application
+  redis:
+    container_name: redis-server_chat
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    build:
+      args:
+        SAVE: --save 60
+    volumes:
+      - redis-data:/data
+    networks:
+      - application
 
   # app:
   #   build: .
